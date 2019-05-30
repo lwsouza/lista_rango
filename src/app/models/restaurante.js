@@ -38,8 +38,8 @@ const RestauranteSchema = new mongoose.Schema({
         }
     },
     funcionamento: {
-        segunda_sexta: [],
-        sabado_domingo: []
+        type: String,
+        require: true
     },
     createdAt: {
         type: Date,
