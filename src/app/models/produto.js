@@ -1,4 +1,5 @@
 const mongoose = require('../../config/database');
+
 const ProdutoSchema = new mongoose.Schema({
     foto: {
         type: String,
@@ -20,7 +21,8 @@ const ProdutoSchema = new mongoose.Schema({
     restaurante: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Restaurante',
-        require: true
+        require: true,
+        unique: true
     },
     promocao: {
         descricao: String,
@@ -32,6 +34,8 @@ const ProdutoSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+ProdutoSchema.index({ nome: 1, restaurante: 1 }, { unique: true });
 
 const Produto = mongoose.model('Produto', ProdutoSchema);
 
