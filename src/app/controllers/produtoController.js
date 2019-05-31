@@ -6,10 +6,17 @@ const Produto = require('../models/produto');
 
 const router = express.Router();
 
+// Criação do produto
 router.post('/', async (req, res) => {
     try {
 
         res.setHeader("Access-Control-Allow-Origin", "*");
+
+        // Verifica se tem imagem
+        if (Object.keys(req.files).length == 0) {
+            res.status(500).json({ error: "Foto é obrigatório!" });
+            return;
+        }
 
         var date = new Date();
         var time_stamp = date.getTime();
@@ -19,6 +26,7 @@ router.post('/', async (req, res) => {
         var path_origem = req.files.foto.path;
         var path_destino = `./src/app/uploads/produto/${url_imagem}`;
 
+        // Move a imagem para a pasta de uploads
         fs.rename(path_origem, path_destino, async function (err) {
             if (err) {
                 res.status(500).json({ error: err });
@@ -57,11 +65,13 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Atualiza os dados do produto
 router.put('/:id', async (req, res) => {
     try {
 
         res.setHeader("Access-Control-Allow-Origin", "*");
 
+        // Verifica se tem atualização de imagem
         if (Object.keys(req.files).length !== 0) {
 
             var date = new Date();
@@ -72,6 +82,7 @@ router.put('/:id', async (req, res) => {
             var path_origem = req.files.foto.path;
             var path_destino = `./src/app/uploads/produto/${url_imagem}`;
 
+            // Move para a pasta de uploads
             fs.rename(path_origem, path_destino, async function (err) {
                 if (err) {
                     res.status(500).json({ error: err });
@@ -102,7 +113,7 @@ router.put('/:id', async (req, res) => {
                 });
             });
         } else {
-
+            // Caso não tenha alteração da imagem
             var dados = {
                 nome: req.body.nome,
                 preco: req.body.preco,
@@ -133,6 +144,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// Deleta o produto
 router.delete('/:id', async (req, res) => {
     try {
         await Produto.findByIdAndRemove(req.params.id);

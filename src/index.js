@@ -14,3 +14,5 @@ require('./app/controllers/index')(app);
 app.listen(3000, function(){
     console.log("API Funcionando!");
 });
+
+module.exports = app;
