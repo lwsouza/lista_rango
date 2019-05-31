@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 
 const Restaurante = require('../models/restaurante');
+const Produto = require('../models/produto');
 
 const router = express.Router();
 
@@ -28,6 +29,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/:id/produto', async (req, res) => {
+    try {
+        var id = req.params.id
+        const produtos = await Produto.find({ restaurante: id });
+
+        res.status(200).send({ produtos });
+
+    } catch (err) {
+        res.status(400).send({ error: 'Erro ao carregar os produtos' });
+    }
+});
 
 router.post('/', async (req, res) => {
     try {
@@ -135,6 +147,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         await Restaurante.findByIdAndRemove(req.params.id);
+        await Produto.deleteMany({restaurante: req.params.id});
 
         return res.send("Deletado com sucesso!");
 
@@ -142,5 +155,6 @@ router.delete('/:id', async (req, res) => {
         res.status(400).send({ error: 'Erro ao deletar restaurante'});
     }
 });
+
 
 module.exports = app => app.use('/restaurante', router);
