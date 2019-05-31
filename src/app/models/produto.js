@@ -11,8 +11,7 @@ const ProdutoSchema = new mongoose.Schema({
     },
     preco: {
         type: String,
-        require: true,
-        unique: true
+        require: true
     },
     categoria: {
         type: String,
@@ -26,8 +25,7 @@ const ProdutoSchema = new mongoose.Schema({
     promocao: {
         descricao: String,
         precoPromocional: String,
-        diasSemana: [],
-        horario: []
+        diaPromocao: []
     },
     createdAt: {
         type: Date,
