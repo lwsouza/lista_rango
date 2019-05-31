@@ -3,6 +3,7 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../../index');
 var should = chai.should();
+var fs = require('fs');
  
 chai.use(chaiHttp);
  
@@ -79,61 +80,98 @@ describe('/GET Restaurantes', function() {
     });
 
     // Criação de novo restaurante
-    // it('Criação de novo restaurante', function(done) {
-    //     var number = Math.floor(Math.random() * 21 + 1);
-    //     chai.request(server)
-    //     .post(`/restaurante`)
-    //     .send({
-    //         nome: "Restaurante Teste",
-    //         foto: "Teste",
-    //         endereco: {
-    //             cidade: "Cidade Teste",
-    //             uf: "SP",
-    //             rua: "Rua testando",
-    //             numero: 200,
-    //             bairro: "Bairro Teste",
-    //             cep: "26366-908"
-    //         },
-    //         funcionamento: "De Segunda a Sexta das 9h ás 18h"
-    //     })
-    //     .end(function(error, res) {
+    it('Criação de novo restaurante', function(done) {
+        var number = Math.floor(Math.random() * 21 + 1);
+        chai.request(server)
+        .post(`/restaurante`)
+        .set('Content-Type', 'application/json')
+        .field('nome', 'Restaurante Teste')
+        .field('lastName', 'Isaiah')
+        .field('cidade', 'Cidade Teste')
+        .field('uf', 'sp')
+        .field('rua', 'Rua testando')
+        .field('numero', '200')
+        .field('bairro', 'Bairro Teste')
+        .field('cep', '26366-908')
+        .attach('avatar',
+          fs.readFileSync('./src/app/test/img/teste.jpg'),
+          'teste.jpg')
+        .end(function(error, res) {
 
-    //         //Se tudo der certo deve retornar o status: 200 - OK
-    //         res.should.have.status(200);
+            //Se tudo der certo deve retornar o status: 200 - OK
+            res.should.have.status(200);
 
-    //         //Em seguida retornar em um objeto
-    //         res.should.be.a('object');
+            //Em seguida retornar em um objeto
+            res.should.be.a('object');
 
-    //         // Verifica se possui a chave interna "game"
-    //         res.body.should.have.property('restaurante');
-    //         res.body.restaurantes.should.have.property('endereco');
-    //         res.body.restaurantes.should.have.property('nome');
-    //         res.body.restaurantes.should.have.property('foto');
-    //         res.body.restaurantes.should.have.property('funcionamento');
+            // Verifica se possui a chave interna
+            res.body.should.have.property('restaurante');
+            res.body.restaurante.should.have.property('endereco');
+            res.body.restaurante.should.have.property('nome');
+            res.body.restaurante.should.have.property('foto');
+            res.body.restaurante.should.have.property('funcionamento');
 
-    //         // Verifica se a chave interna é um objeto
-    //         res.body.restaurantes[0].endereco.should.be.a('object');
+            // Verifica se a chave interna é um objeto
+            res.body.restaurante.endereco.should.be.a('object');
 
-    //     done();
-    //     });
-    // });
+        done();
+        });
+    });
+
+    // Atualização do restaurante
+    it('Atualização de restaurante', function(done) {
+        chai.request(server)
+        .put(`/restaurante/5cf07b35d6227a1918bb6bf7`)
+        .set('Content-Type', 'application/json')
+        .field('nome', 'Restaurante Teste Filial')
+        .field('lastName', 'Isaiah')
+        .field('cidade', 'Cidade Teste')
+        .field('uf', 'sp')
+        .field('rua', 'Rua testando')
+        .field('numero', '200')
+        .field('bairro', 'Bairro Teste')
+        .field('cep', '26366-908')
+        .attach('avatar',
+          fs.readFileSync('./src/app/test/img/teste.jpg'),
+          'teste.jpg')
+        .end(function(error, res) {
+
+            //Se tudo der certo deve retornar o status: 200 - OK
+            res.should.have.status(200);
+
+            //Em seguida retornar em um objeto
+            res.should.be.a('object');
+
+            // Verifica se possui a chave interna
+            res.body.should.have.property('restaurante');
+            res.body.restaurante.should.have.property('endereco');
+            res.body.restaurante.should.have.property('nome');
+            res.body.restaurante.should.have.property('foto');
+            res.body.restaurante.should.have.property('funcionamento');
+
+            // Verifica se a chave interna é um objeto
+            res.body.restaurante.endereco.should.be.a('object');
+
+        done();
+        });
+    });
 
     // Retorno da mensagem, após deletar o restaurante
-    // it('Deve retornar a mensagem dizendo que o restaurante foi excluído', function(done) {
-    //     chai.request(server)
-    //     .delete(`/restaurante/5cf07b35d6227a1918bb6bf7`)
-    //     .end(function(error, res) {
+    it('Deve retornar a mensagem dizendo que o restaurante foi excluído', function(done) {
+        chai.request(server)
+        .delete(`/restaurante/5cf07b35d6227a1918bb6bf7`)
+        .end(function(error, res) {
 
-    //         //Se tudo der certo deve retornar o status: 200 - Ok
-    //         res.should.have.status(200);
+            //Se tudo der certo deve retornar o status: 200 - Ok
+            res.should.have.status(200);
 
-    //         //Em seguida retornar uma string
-    //         res.text.should.be.a('string');
+            //Em seguida retornar uma string
+            res.text.should.be.a('string');
 
-    //         // Verifica se o resultado retornado é igual ao esperado
-    //         res.text.should.equal('Deletado com sucesso!');
+            // Verifica se o resultado retornado é igual ao esperado
+            res.text.should.equal('Deletado com sucesso!');
 
-    //     done();
-    //     });
-    // });
+        done();
+        });
+    });
 });
