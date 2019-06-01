@@ -147,9 +147,13 @@ router.put('/:id', async (req, res) => {
 // Deleta o produto
 router.delete('/:id', async (req, res) => {
     try {
-        await Produto.findByIdAndRemove(req.params.id);
+        var produto = await Produto.findByIdAndRemove(req.params.id);
 
-        return res.send("Deletado com sucesso!");
+        fs.unlink(`./src/app/uploads/produto/${produto.foto}`, async (err) => {
+            if (err) throw err;
+
+            return res.send("Deletado com sucesso!");
+        });
 
     } catch (err) {
         res.status(400).send({ error: 'Erro ao deletar produto' });

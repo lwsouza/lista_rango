@@ -179,27 +179,48 @@ router.put('/:id', async (req, res) => {
                 res.status(200).send({ restaurante });
 
             });
-            
+
         }
 
     } catch (err) {
         console.log(err)
-        res.status(400).send({ error: 'Erro ao atualizar o restaurante'});
+        res.status(400).send({ error: 'Erro ao atualizar o restaurante' });
     }
 });
 
 // Deleta o restaurante
 router.delete('/:id', async (req, res) => {
     try {
-        // Deleta o restaurante
-        await Restaurante.findByIdAndRemove(req.params.id);
-        // Deleta seus produtos
-        await Produto.deleteMany({restaurante: req.params.id});
 
-        return res.send("Deletado com sucesso!");
+        // Deleta o restaurante
+        var restaurant = await Restaurante.findByIdAndRemove(req.params.id);
+
+        // Apaga a foto do restaurante
+        fs.unlink(`./src/app/uploads/restaurante/${restaurant.foto}`, async (err) => {
+            if (err) throw err;
+
+            var getProdutos = await Produto.find({ restaurante: req.params.id });
+
+            // Apaga a foto dos produtos
+            getProdutos.forEach(async element => {
+
+                await fs.unlink(`./src/app/uploads/produto/${element.foto}`, async (err) => {
+                    if (err) throw err;
+                });
+
+            });
+
+            // Deleta seus produtos
+            await Produto.deleteMany({ restaurante: req.params.id });
+
+            return res.send("Deletado com sucesso!");
+        });
+
+
 
     } catch (err) {
-        res.status(400).send({ error: 'Erro ao deletar restaurante'});
+        console.log(err)
+        res.status(400).send({ error: 'Erro ao deletar restaurante' });
     }
 });
 

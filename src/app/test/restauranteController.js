@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 /**
  * Teste da rota: /GET Restaurantes
  */
-describe('/GET Restaurantes', function() {
+describe('/Restaurantes', function() {
 
     //Retorno da lista de restaurantes
     it('Deve retornar a lista de restaurantes', function(done) {
@@ -33,10 +33,10 @@ describe('/GET Restaurantes', function() {
         });
     });
 
-    // Retorno de um restaurante com seus dados
+    // // Retorno de um restaurante com seus dados
     it('Deve retornar o restaurante escolhido com seus dados', function(done) {
         chai.request(server)
-        .get('/restaurante/5cf0651b1ba9df0b14388195')
+        .get('/restaurante/5cf2b18d8c9f4f08684e2b4c')
         .end(function(error, res) {
 
             //Se tudo der certo deve retornar o status: 200 - OK
@@ -59,10 +59,10 @@ describe('/GET Restaurantes', function() {
         });
     });
 
-    // Retorno dos produtos de um restaurante
+    // // Retorno dos produtos de um restaurante
     it('Deve retornar os produtos de um restaurante', function(done) {
         chai.request(server)
-        .get('/restaurante/5cf0651b1ba9df0b14388195/produto')
+        .get('/restaurante/5cf2b18d8c9f4f08684e2b4c/produto')
         .end(function(error, res) {
 
             //Se tudo der certo deve retornar o status: 200 - OK
@@ -93,13 +93,11 @@ describe('/GET Restaurantes', function() {
         .field('numero', '200')
         .field('bairro', 'Bairro Teste')
         .field('cep', '26366-908')
-        .attach('avatar',
+        .field('funcionamento', 'De Segunda à Sexta das 09h as 18h e de Sabado à Domingo das 11h as 20h')
+        .attach('foto',
           fs.readFileSync('./src/app/test/img/teste.jpg'),
           'teste.jpg')
         .end(function(error, res) {
-
-            //Se tudo der certo deve retornar o status: 200 - OK
-            res.should.have.status(200);
 
             //Em seguida retornar em um objeto
             res.should.be.a('object');
@@ -118,10 +116,10 @@ describe('/GET Restaurantes', function() {
         });
     });
 
-    // Atualização do restaurante
+    // // Atualização do restaurante
     it('Atualização de restaurante', function(done) {
         chai.request(server)
-        .put(`/restaurante/5cf07b35d6227a1918bb6bf7`)
+        .put(`/restaurante/5cf2b25d8c9f4f08684e2b55`)
         .set('Content-Type', 'application/json')
         .field('nome', 'Restaurante Teste Filial')
         .field('lastName', 'Isaiah')
@@ -131,13 +129,11 @@ describe('/GET Restaurantes', function() {
         .field('numero', '200')
         .field('bairro', 'Bairro Teste')
         .field('cep', '26366-908')
-        .attach('avatar',
+        .field('funcionamento', 'De Segunda à Sexta das 09h as 18h e de Sabado à Domingo das 11h as 20h')
+        .attach('foto',
           fs.readFileSync('./src/app/test/img/teste.jpg'),
           'teste.jpg')
         .end(function(error, res) {
-
-            //Se tudo der certo deve retornar o status: 200 - OK
-            res.should.have.status(200);
 
             //Em seguida retornar em um objeto
             res.should.be.a('object');
@@ -159,7 +155,7 @@ describe('/GET Restaurantes', function() {
     // Retorno da mensagem, após deletar o restaurante
     it('Deve retornar a mensagem dizendo que o restaurante foi excluído', function(done) {
         chai.request(server)
-        .delete(`/restaurante/5cf07b35d6227a1918bb6bf7`)
+        .delete(`/restaurante/5cf2b25d8c9f4f08684e2b55`)
         .end(function(error, res) {
 
             //Se tudo der certo deve retornar o status: 200 - Ok
